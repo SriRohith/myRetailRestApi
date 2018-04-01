@@ -23,8 +23,7 @@ public class ApiClientService {
             .setSocketTimeout(30000)
             .build();	
 	
-	//opens a global connection
-	//can be modified with other configuration if number of requests are heavy.
+	
     CloseableHttpClient httpClient=HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
     
     public ClientResponseEntity getClientService(String url){
@@ -36,7 +35,9 @@ public class ApiClientService {
 			 HttpResponse response=httpClient.execute(httpGet);
 			 responseStatus=response.getStatusLine().getStatusCode();	
 			 clientResponseEntity.setResponseStatus(responseStatus);
-			 clientResponseEntity.setResponseObject(new JSONObject(EntityUtils.toString(response.getEntity())));
+			 if(responseStatus == 200){
+				 clientResponseEntity.setResponseObject(new JSONObject(EntityUtils.toString(response.getEntity())));
+			 }
 			 return clientResponseEntity;			 
 		} catch ( IOException | ParseException | JSONException e) {
 			 throw new ConnectionTimeOutException("Exception while making myretail api request: "+e.getMessage());
