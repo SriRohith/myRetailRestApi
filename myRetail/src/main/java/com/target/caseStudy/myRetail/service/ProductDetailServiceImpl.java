@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.target.caseStudy.myRetail.dao.ProductDetailDAO;
 import com.target.caseStudy.myRetail.entity.ProductDetailEntity;
@@ -27,11 +28,10 @@ public class ProductDetailServiceImpl implements ProductDetailService {
 	ApiClientService myRetailApiClientService;
 	
 	@Value("${myRetailUrl}")
-	private String myRetailUrl;// = "https://redsky.target.com/v2/pdp/tcin/13860428?excludes=taxonomy,price,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics";
+	private String myRetailUrl;
 	
 	@Override
-	public ResponseEntity<ProductDetail> getProductDetails(String id) {
-		Long productId = Long.parseLong(id);
+	public ResponseEntity<ProductDetail> getProductDetails(long id) {
 		String productName = "";
 		ProductDetail productDetail = new ProductDetail();
 		ProductPrice productPrice = new ProductPrice();
@@ -58,27 +58,35 @@ public class ProductDetailServiceImpl implements ProductDetailService {
 		} catch (JSONException e) {
 			throw new JsonProcessingException("Exception while processing Json response object from myRetail Product Api - "+e.getMessage() );
 		}
-		ProductDetailEntity productDetailEntity = productDetailDAO.findOne(productId);
+		ProductDetailEntity productDetailEntity = productDetailDAO.findOne(id);
+		if(!StringUtils.isEmpty(productDetailEntity)){
 	    productPrice.setPrice(productDetailEntity.getPrice());
 	    productPrice.setCurrency_code(productDetailEntity.getCurrency_code());
-   	   
-	    productDetail.setId(productId);
+	    
+	    productDetail.setId(id);
 	    productDetail.setName(productName);
 	    productDetail.setCurrent_price(productPrice);
-	    
 	    return new ResponseEntity<ProductDetail>(productDetail,HttpStatus.OK);
+		}else{
+			throw new ProductNotFoundException("Product not found with id: "+ id);
+		}
+	
 	}
 
 	@Override
-	public ResponseEntity<ProductDetail> updateProductDetails(String id, ProductDetail productDetail) {
-		Long productId = Long.parseLong(id);
-		ProductDetailEntity productDetailEntity = productDetailDAO.findOne(productId);
-		if(productDetailEntity != null){
+	public ResponseEntity<ProductDetail> updateProductDetails(long id, ProductDetail productDetail) {
+		ProductDetailEntity productDetailEntity = productDetailDAO.findOne(id);
+		if(!StringUtils.isEmpty(productDetailEntity)){
 			productDetailEntity.setPrice(productDetail.getCurrent_price().getPrice());
 			productDetailEntity.setCurrency_code(productDetail.getCurrent_price().getCurrency_code());
-			productDetailDAO.save(productDetailEntity);
+			if(productDetail.getId()==productDetailEntity.getId())
+				productDetailDAO.save(productDetailEntity);
+			else
+				return new ResponseEntity<ProductDetail>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<ProductDetail>(productDetail,HttpStatus.OK);
+		}else{
+			return new ResponseEntity<ProductDetail>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<ProductDetail>(productDetail,HttpStatus.OK);
 	}
 
 }
