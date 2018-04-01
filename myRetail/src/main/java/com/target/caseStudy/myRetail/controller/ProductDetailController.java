@@ -19,13 +19,13 @@ public class ProductDetailController {
 	ProductDetailService productDetailService;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<ProductDetail> getProductDetails(@PathVariable(value = "id") String id) {
+	public ResponseEntity<ProductDetail> getProductDetails(@PathVariable(value = "id") long id) {
 
 		return productDetailService.getProductDetails(id);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<ProductDetail> updateProductDetails(@PathVariable(value = "id") String id,
+	public ResponseEntity<ProductDetail> updateProductDetails(@PathVariable(value = "id") long id,
 			@RequestBody ProductDetail productDetail) {
 		
 		return productDetailService.updateProductDetails(id, productDetail);
