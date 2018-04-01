@@ -25,6 +25,8 @@ public class MyRetailApplication implements CommandLineRunner{
 		productDetailDAO.deleteAll();
 		
 		productDetailDAO.save(new ProductDetailEntity(13860428, 13.49, "USD"));
+		productDetailDAO.save(new ProductDetailEntity(16696652, 199.99, "USD"));
+		
 		
 		System.out.println("After loading");
 		for(ProductDetailEntity e : productDetailDAO.findAll()){
