@@ -6,8 +6,8 @@ import com.target.caseStudy.myRetail.pojo.ProductDetail;
 
 public interface ProductDetailService {
 	
-	public ResponseEntity<ProductDetail> getProductDetails(String id);
+	public ResponseEntity<ProductDetail> getProductDetails(long id);
 	
-	public ResponseEntity<ProductDetail> updateProductDetails(String id, ProductDetail productDetail);
+	public ResponseEntity<ProductDetail> updateProductDetails(long id, ProductDetail productDetail);
 
 }
