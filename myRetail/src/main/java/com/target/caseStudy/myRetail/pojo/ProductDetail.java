@@ -34,6 +34,18 @@ public class ProductDetail {
 		this.current_price = current_price;
 	}
 
+	public ProductDetail() {
+		
+		// TODO Auto-generated constructor stub
+	}
+
+	public ProductDetail(long id, String name, ProductPrice current_price) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.current_price = current_price;
+	}
+
 	@Override
 	public String toString() {
 		return "ProductDetail [id=" + id + ", name=" + name + ", currency_code=" + current_price.getCurrency_code()+", current_price=" +current_price.getCurrency_code()+ "]";
