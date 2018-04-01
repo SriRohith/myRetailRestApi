@@ -38,9 +38,9 @@ public class ExceptionalHandlerAdvice extends ResponseEntityExceptionHandler{
 
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<ExceptionDetails> handleAllExceptions(Exception ex, WebRequest request) {
-		ExceptionDetails errorDetails = new ExceptionDetails(new Date(), ex.getMessage(),
+		ExceptionDetails exceptionDetails = new ExceptionDetails(new Date(), ex.getMessage(),
 				request.getDescription(false));
-		return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(exceptionDetails, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }
